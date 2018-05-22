@@ -1,10 +1,10 @@
 -module(event).
--export([loop/1, normalize/1]).
--record(state, {server,  %% rr(event,state). load record definition from module
-                name="",
-                to_go=0}).
+-compile(export_all).
+-record(state, {server,
+  name = "",
+  to_go = 0}).
 
-loop(S = #state{server=Server, to_go=[T|Next]}) ->
+loop(S = #state{server = Server, to_go = [T | Next]}) ->
   receive
     {Server, Ref, cancel} ->
       Server ! {Ref, ok}
@@ -17,7 +17,7 @@ loop(S = #state{server=Server, to_go=[T|Next]}) ->
   end.
 
 normalize(N) ->
-  Limit = 49 * 24 * 60 * 60,  %% Erlang is limited to about 49 days in milliseconds
+  Limit = 49 * 24 * 60 * 60,
   [N rem Limit | lists:duplicate(N div Limit, Limit)].
 
 start(EventName, Delay) ->
@@ -26,10 +26,10 @@ start(EventName, Delay) ->
 start_link(EventName, Delay) ->
   spawn_link(?MODULE, init, [self(), EventName, Delay]).
 
-init(Server, EventName, Delay) ->
-  loop(#state{server=Server,
-              name=EventName,
-              to_go=normalize(Delay)}).
+init(Server, EventName, DateTime) ->
+  loop(#state{server = Server,
+    name = EventName,
+    to_go = time_to_go(DateTime)}).
 
 cancel(Pid) ->
   Ref = erlang:monitor(process, Pid),
@@ -41,3 +41,12 @@ cancel(Pid) ->
     {'DOWN', Ref, process, Pid, _Reason} ->
       ok
   end.
+
+time_to_go(TimeOut = {{_, _, _}, {_, _, _}}) ->
+  Now = calendar:local_time(),
+  ToGo = calendar:datetime_to_gregorian_seconds(TimeOut) -
+    calendar:datetime_to_gregorian_seconds(Now),
+  Secs = if ToGo > 0 -> ToGo;
+           ToGo =< 0 -> 0
+         end,
+  normalize(Secs).
