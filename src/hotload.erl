@@ -8,7 +8,7 @@ server(State) ->
       NewState = ?MODULE:upgrade(State),
       ?MODULE:server(NewState);  %% loop in the new version of the module
     SomeMessage ->
-      server(State)  %% stay in the same version no matter what
+      server(State)  %% stay in the same version no matter what.
   end.
 
 upgrade(OldState) ->
