@@ -208,9 +208,6 @@ wait(Event, Data) ->
   unexpected(Event, wait),
   {next_state, wait, Data}.
 
-priority(OwnPid, OtherPid) when OwnPid > OtherPid -> true;
-priority(OwnPid, OtherPid) when OwnPid < OtherPid -> false.
-
 ready(ack, S = #state{}) ->
   case priority(self(), S#state.other) of
     true ->
@@ -307,3 +304,6 @@ add(Item, Items) ->
 %% remove an item from an item list
 remove(Item, Items) ->
   Items -- [Item].
+
+priority(OwnPid, OtherPid) when OwnPid > OtherPid -> true;
+priority(OwnPid, OtherPid) when OwnPid < OtherPid -> false.
