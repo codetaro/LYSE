@@ -31,6 +31,6 @@ leave_feed(Pid, HandlerId) ->
   gen_event:delete_handler(Pid, HandlerId, leave_feed).
 
 
-%%%
+%%% returns the current game state
 game_info(Pid) ->
   gen_event:call(Pid, curling_accumulator, game_data).
