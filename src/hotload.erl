@@ -7,9 +7,9 @@ server(State) ->
     update ->
       NewState = ?MODULE:upgrade(State),
       ?MODULE:server(NewState);  %% loop in the new version of the module
-    SomeMessage ->
+    _SomeMessage ->
       server(State)  %% stay in the same version no matter what.
   end.
 
-upgrade(OldState) ->
+upgrade(_OldState) ->
   {}.  %% transform and return the state here

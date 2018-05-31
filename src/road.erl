@@ -2,7 +2,7 @@
 -compile(export_all).
 
 main([FileName]) ->
-  File = "road.txt",
+  _File = "road.txt",
   {ok, Bin} = file:read_file(FileName),
 %%  optimal_path(parse_map(Bin)).
   Map = parse_map(Bin),
