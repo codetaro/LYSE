@@ -1,0 +1,8 @@
+{release,
+  {"erlcount", "1.0.0"},  % name of the release is unrelated to the ppool and erlcount applications
+  {erts, "9.3"},
+  [
+    {kernel, "5.4.3"},
+    {stdlib, "3.4.5"},
+    {ppool, "1.0.0", permanent},
+    {erlcount, "1.0.0", transient}]}.
