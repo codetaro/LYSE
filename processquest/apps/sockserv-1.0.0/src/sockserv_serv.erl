@@ -14,9 +14,9 @@
 -define(TIME, 800).
 -define(EXP, 50).
 
--record(state, {name,  % player'sname
-  next,                % next step, used when initializing
-  socket}).            % the current socket
+-record(state, {name,                % player'sname
+                next,                % next step, used when initializing
+                socket}).            % the current socket
 
 
 %%%===================================================================
@@ -31,8 +31,8 @@ start_link(Socket) ->
 %%%===================================================================
 
 init(Socket) ->
-  <<A:32, B:32, C:32>> = crypto:strong_rand_bytes(12),
-  rand:seed({A, B, C}),
+  <<A:32, B:32, C:32>> = crypto:rand_bytes(12),
+  random:seed({A, B, C}),
   gen_server:cast(self(), accept),
   {ok, #state{socket = Socket}}.
 

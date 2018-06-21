@@ -5,7 +5,7 @@
 
 fetch() ->
   L = enemies(),
-  lists:nth(rand:uniform(length(L)), L).
+  lists:nth(random:uniform(length(L)), L).
 
 enemies() ->
   [{<<"Ant">>, [{drop, {<<"Ant Egg">>, 1}}, {experience, 1}]},

@@ -5,7 +5,8 @@
 -export([start_link/0, stop/0, register/2, unregister/1, whereis/1, get_names/0]).
 
 %% gen_server callbacks
--export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2,
+  terminate/2, code_change/3]).
 
 -record(state, {pid, name}).
 

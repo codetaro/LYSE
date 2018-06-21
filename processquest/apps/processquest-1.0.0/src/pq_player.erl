@@ -42,7 +42,7 @@ start_link(Name, Opts) ->
 %%%===================================================================
 
 init({Name, Opts}) ->
-  <<A:32, B:32, C:32>> = crypto:strong_rand_bytes(12),
+  <<A:32, B:32, C:32>> = crypto:rand_bytes(12),
   rand:seed({A, B, C}),
   gen_fsm:send_event(self(), kill),
   case regis:register(Name, self()) of

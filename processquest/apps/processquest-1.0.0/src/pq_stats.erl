@@ -19,4 +19,4 @@ roll() -> roll(1).
 
 %% rolls num 6-faced dice
 roll(Num) ->
-  lists:sum([rand:uniform(6) || _ <- lists:seq(1, Num)]).
+  lists:sum([random:uniform(6) || _ <- lists:seq(1, Num)]).
