@@ -1,14 +1,7 @@
-{application, processquest, [
-  {description, "Game inspired by the Progress Quest game (http://progressquest.com)"},
+{application, processquest,
+ [{description, "Game inspired by the Progress Quest game (http://progressquest.com)"},
   {vsn, "1.0.0"},
-  {registered, [pq_supersup]},
-  {applications, [
-    kernel,
-    stdlib,
-    regis,
-    crypto
-  ]},
-  {modules, [processquest, pq_stats, pq_enemy, pq_events, pq_player]},
   {mod, {processquest, []}},
-  {env, []}
-]}.
+  {registered, [pq_supersup]},
+  {modules, [processquest, pq_stats, pq_enemy, pq_events, pq_player]},
+  {applications, [stdlib, kernel, regis, crypto]}]}.
