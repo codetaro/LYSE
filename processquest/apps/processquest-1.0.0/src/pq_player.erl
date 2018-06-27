@@ -112,8 +112,11 @@ market(buy, S = #state{equip=Equip, money=Money, bought=Bought}) ->
             bought=[Slot|Bought]}}
       end
   end;
-market(_Event, State) ->
-  {next_state, state_name, State}.
+%% Heading to the killing field. State only useful as a state transition.
+market(kill, S) ->
+  pq_events:location(S#state.name, killing, S#state.time),
+  gen_fsm:send_event(self(), kill),
+  {next_state, killing, S}.
 
 %% Killing an enemy on the killing field. Taking its drop and keeping it
 %% in our loot.
@@ -154,8 +157,7 @@ handle_event(_Event, StateName, State) ->
   {next_state, StateName, State}.
 
 handle_sync_event(_Event, _From, StateName, State) ->
-  Reply = ok,
-  {reply, Reply, StateName, State}.
+  {next_state, StateName, State}.
 
 handle_info(_Info, StateName, State) ->
   {next_state, StateName, State}.
@@ -164,7 +166,7 @@ terminate(_Reason, _StateName, _State) ->
   ok.
 
 code_change(_OldVsn, StateName, State, _Extra) ->
-  {ok, StateName, State}.
+  {next_state, StateName, State}.
 
 %%%===================================================================
 %%% Internal functions
