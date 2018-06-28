@@ -1,0 +1,9 @@
+[{release,"processquest","1.0.0","5.10.4",
+          [{kernel,"2.16.4","rel/lib/kernel-2.16.4"},
+           {stdlib,"1.19.4","rel/lib/stdlib-1.19.4"},
+           {sasl,"2.3.4","rel/lib/sasl-2.3.4"},
+           {crypto,"3.2","rel/lib/crypto-3.2"},
+           {regis,"1.0.0","rel/lib/regis-1.0.0"},
+           {processquest,"1.0.0","rel/lib/processquest-1.0.0"},
+           {sockserv,"1.0.0","rel/lib/sockserv-1.0.0"}],
+          permanent}].

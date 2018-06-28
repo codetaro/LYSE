@@ -1,0 +1,11 @@
+%% rel generated at {2018,6,28} {17,30,4}
+{release,{"processquest","1.1.0"},
+         {erts,"5.10.4"},
+         [{kernel,"2.16.4"},
+          {stdlib,"1.19.4"},
+          {sasl,"2.3.4"},
+          {crypto,"3.2"},
+          {regis,"1.0.0"},
+          {processquest,"1.1.0"},
+          {sockserv,"1.0.1"}]}.
+
