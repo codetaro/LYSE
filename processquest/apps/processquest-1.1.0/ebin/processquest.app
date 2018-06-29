@@ -3,5 +3,6 @@
   {vsn, "1.1.0"},
   {mod, {processquest, []}},
   {registered, [pq_supersup]},
-  {modules, [processquest, pq_stats, pq_enemy, pq_quest, pq_events, pq_player]},
+  {modules, [processquest, pq_stats, pq_enemy, pq_quest, pq_events,
+             pq_player]},
   {applications, [stdlib, kernel, regis, crypto]}]}.
