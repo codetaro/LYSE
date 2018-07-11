@@ -9,7 +9,7 @@
 start_server(Port) ->
   Pid = spawn_link(
     fun() ->
-      {ok, Listen} = gen_tcp:listen(Port, [binary, {active, false}]),
+      {ok, Listen} = gen_tcp:listen(Port, [binary, {active, false}, {packet, line}]),
       spawn(fun() -> acceptor(Listen) end),
       timer:sleep(infinity)
     end
