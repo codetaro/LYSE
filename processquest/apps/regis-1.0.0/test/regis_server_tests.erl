@@ -111,13 +111,13 @@ unregister_nocrash(_) ->
 
 crash_unregisters(_) ->
 %%  Ref = make_ref(),
-%%  Pid = spawn(fun() -> callback(Ref) end),
-%%  timer:sleep(150),
+%%  Pid = spawn(fun() -> callback(Ref) end),  % Register a process
+%%  timer:sleep(150),                         % Make sure the process is registered
 %%  Pid = regis_server:whereis(Ref),
-%%  exit(Pid, kill),
+%%  exit(Pid, kill),                          % Kill that process
 %%  timer:sleep(95),
-%%  regis_server:register(Ref, self()),
-%%  S = regis_server:whereis(Ref),
+%%  regis_server:register(Ref, self()),       % Steal the process' identity (the true spy way)
+%%  S = regis_server:whereis(Ref),            % Check whether we do hold the name ourselves.
 %%  Self = self(),
 %%  ?_assertEqual(Self, S).
   Ref = make_ref(),
