@@ -5,14 +5,15 @@
 %%%-------------------------------------------------------------------
 -module(regis_server).
 -behaviour(gen_server).
+-include_lib("stdlib/include/ms_transform.hrl").
 
 %% API
 -export([start_link/0, stop/0, register/2, unregister/1, whereis/1,
-         get_names/0]).
+  get_names/0]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
-         code_change/3, terminate/2]).
+  code_change/3, terminate/2]).
 
 %% We have two indexes: one by name and one by pid, for
 %% MAXIMUM SPEED (not actually measured).
@@ -37,10 +38,16 @@ unregister(Name) ->
   gen_server:call(?MODULE, {unregister, Name}).
 
 %% Find the pid associated with a process
-whereis(Name) -> ok.
+whereis(Name) ->
+  case ets:lookup(?MODULE, Name) of
+    [{Name, Pid, _Ref}] -> Pid;
+    [] -> undefined
+  end.
 
 %% Find all the names currently registered.
-get_names() -> ok.
+get_names() ->
+  MatchSpec = ets:fun2ms(fun({Name, _, _}) -> Name end),
+  ets:select(?MODULE, MatchSpec).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -64,37 +71,42 @@ handle_call({register, Name, Pid}, _From, Tid) ->
     [{_, Pid} | _] -> % maybe more then one result, but Pid matches
       {reply, {error, already_named}, Tid}
   end;
-handle_call({unregister, Name}, _From, S = #state{pid=P, name=N}) ->
-  case gb_trees:lookup(Name, N) of
-    {value, {Pid,Ref}} ->
+handle_call({unregister, Name}, _From, Tid) ->
+  case ets:lookup(Tid, Name) of
+    [{Name, _Pid, Ref}] ->
       erlang:demonitor(Ref, [flush]),
-      {reply, ok, S#state{pid=gb_trees:delete(Pid, P),
-        name=gb_trees:delete(Name, N)}};
-    none ->
-      {reply, ok, S}
+      ets:delete(Tid, Name),
+      {reply, ok, Tid};
+    [] ->
+      {reply, ok, Tid}
   end;
-handle_call({whereis, Name}, _From, S = #state{name=N}) ->
+handle_call({whereis, Name}, _From, S = #state{name = N}) ->
   case gb_trees:lookup(Name, N) of
-    {value, {Pid,_}} ->
+    {value, {Pid, _}} ->
       {reply, Pid, S};
     none ->
       {reply, undefined, S}
   end;
-handle_call(get_names, _From, S = #state{name=N}) ->
+handle_call(get_names, _From, S = #state{name = N}) ->
   {reply, gb_trees:keys(N), S};
-handle_call(stop, _From, State) ->
-  {stop, normal, ok, State};
-handle_call(_Request, _From, State) ->
-  {reply, ok, State}.
-
-handle_cast(_Request, State) ->
+handle_call(stop, _From, Tid) ->
+  %% For the sake of being synchronous and because emptying ETS
+  %% tables might take a bit longer than dropping data structures
+  %% held in memory, dropping the table here will be safer for
+  %% tricky race conditions, especially in tests where we start/stop
+  %% servers a lot. In regular code, this doesn't matter.
+  ets:delete(Tid),
+  {stop, normal, ok, Tid};
+handle_call(_Event, _From, State) ->
   {noreply, State}.
 
-handle_info({'DOWN', Ref, process, Pid, _Reason}, S = #state{pid=P,name=N}) ->
-  {value, {Name, Ref}} = gb_trees:lookup(Pid, P),
-  {noreply, S#state{pid = gb_trees:delete(Pid, P),
-                    name = gb_trees:delete(Name, N)}};
-handle_info(_Info, State) ->
+handle_cast(_Event, State) ->
+  {noreply, State}.
+
+handle_info({'DOWN', Ref, process, Pid, _Reason}, Tid) ->
+  ets:match_delete(Tid, {'_', '_', Ref}),
+  {noreply, Tid};
+handle_info(_Event, State) ->
   {noreply, State}.
 
 code_change(_OldVsn, State, _Extra) ->
