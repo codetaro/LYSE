@@ -1,12 +1,9 @@
 {application, m8ball, [
-  {description, "Answer vital questions"},
   {vsn, "1.0.0"},
+  {description, "Answer vital questions"},
+  {modules, [m8ball, m8ball_sup, m8ball_server]},
+  {applications, [kernel, stdlib, crypto]},
   {registered, [m8ball, m8ball_sup, m8ball_server]},
-  {applications, [
-    kernel,
-    stdlib,
-    crypto
-  ]},
   {mod, {m8ball, []}},
   {env, [
     {answers, {

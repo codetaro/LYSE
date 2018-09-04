@@ -22,7 +22,7 @@ start_link() ->
 stop() ->
   gen_server:call({global, ?MODULE}, stop).
 
-ask(_Question) ->
+ask(_Question) -> % the question doesn't matter!
   gen_server:call({global, ?MODULE}, question).
 
 %%%===================================================================
