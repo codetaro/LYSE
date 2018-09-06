@@ -1,5 +1,5 @@
-{alias,demo,"./demo/"}.
-{alias,meeting,"./meeting/"}.
+{alias, demo, "./demo/"}.
+{alias, meeting, "./meeting/"}.
 {logdir, "./logs/"}.
 
 {suites, meeting, all}.
