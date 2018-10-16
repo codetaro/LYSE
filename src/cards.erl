@@ -7,6 +7,7 @@
 -type value() :: 1..10 | j | q | k.
 -type card() :: {suit(), value()}.
 
+-export_type([card/0]).
 
 -spec kind(card()) -> face | number.
 kind({_, A}) when A >= 1, A =< 10 -> number;

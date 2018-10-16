@@ -15,7 +15,9 @@ pop({fifo, In, []}) -> pop({fifo, [], lists:reverse(In)});
 pop({fifo, In, [H | T]}) -> {H, {fifo, In, T}}.
 
 -spec empty({fifo, [], []}) -> true;
-    ({fifo, nonempty_list(), nonempty_list()}) -> false.
+    ({fifo, [any(), ...], []}) -> false;
+    ({fifo, [], [any(), ...]}) -> false;
+    ({fifo, [any(), ...], [any(), ...]}) -> false.
 empty({fifo, [], []}) -> true;
 empty({fifo, _, _}) -> false.
 
@@ -26,4 +28,4 @@ test() ->
   N = N3,
   true = empty(N3),
   false = empty(N2),
-  pop({fifo, [a | b], [e]}).
+  pop({fifo, [a, b], [e]}).
